@@ -1,6 +1,6 @@
 {
   "name": "com.phantasma.phantasmalinkclient",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "displayName": "Phantasma Link Client",
   "description": "Phantasma Link Client, use to connect to the Phantasma Blockchain",
   "unity": "2020.3",
