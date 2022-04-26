@@ -343,13 +343,15 @@ public class PhantasmaLinkClient: MonoBehaviour
 
                 if (connectedNexus != this.Nexus)
                 {
+                    this.IsLogged = false;
                     callback(false, $"invalid nexus: got {connectedNexus} but expected {this.Nexus}");
                 }
                 else
                 {
                     this.Wallet = result.GetString("wallet");
                     this.Token = result.GetString("token");
-
+                    this.IsLogged = true;
+                    
                     FetchAccount(callback);
                 }
             }
