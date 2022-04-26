@@ -17,6 +17,8 @@
   "license": "ISC",
   "type": "library",
   "hideInEditor": false,
+  "enableLockFile": true,
+  "resolutionStrategy": "highest",
   "dependencies": {
     "com.unity.textmeshpro": "3.0.6"
   }
