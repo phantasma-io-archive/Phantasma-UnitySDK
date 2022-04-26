@@ -169,12 +169,12 @@ public class PhantasmaLinkClient: MonoBehaviour
                     }
                 }
 
-                callback(true, "Logged with success!");
+                callback?.Invoke(true, "Logged with success!");
                 OnLogin?.Invoke(true, "Logged with success!");
             }
             else
             {
-                callback(false, "could not obtain account");
+                callback?.Invoke(false, "could not obtain account");
                 OnLogin?.Invoke(false, "could not obtain account");
 
             }
@@ -190,10 +190,14 @@ public class PhantasmaLinkClient: MonoBehaviour
     /// <param name="callback"></param>
     private async void SendLinkRequest(string request, Action<DataNode> callback)
     {
-        if (this.Token != null)
+        if (!request.Contains("authorize"))
         {
-            request = request + '/' + this.DappID + '/' + this.Token;
+            if (this.Token != null)
+            {
+                request = request + '/' + this.DappID + '/' + this.Token;
+            }
         }
+            
 
         Debug.Log("Sending Phantasma Link Request: " + request);
 
@@ -287,7 +291,7 @@ public class PhantasmaLinkClient: MonoBehaviour
                 var callback = _requestCallbacks[reqID];
                 _requestCallbacks.Remove(reqID);
 
-                callback(node);
+                callback?.Invoke(node);
             }
             else
             {
@@ -344,7 +348,7 @@ public class PhantasmaLinkClient: MonoBehaviour
                 if (connectedNexus != this.Nexus)
                 {
                     this.IsLogged = false;
-                    callback(false, $"invalid nexus: got {connectedNexus} but expected {this.Nexus}");
+                    callback?.Invoke(false, $"invalid nexus: got {connectedNexus} but expected {this.Nexus}");
                 }
                 else
                 {
@@ -401,7 +405,7 @@ public class PhantasmaLinkClient: MonoBehaviour
 
         if (script.Length >= 8192)
         {
-            callback(Hash.Null, "script too big");
+            callback?.Invoke(Hash.Null, "script too big");
             return;
         }
 
@@ -445,17 +449,17 @@ public class PhantasmaLinkClient: MonoBehaviour
     {
         if (!Enabled)
         {
-            callback(true, "not logged in", "", "");
+            callback?.Invoke(true, "not logged in", "", "");
             return;
         }
         if (data == null)
         {
-            callback(true, "invalid data, sorry :(", "", "");
+            callback?.Invoke(true, "invalid data, sorry :(", "", "");
             return;
         }
         if (data.Length >= 1024)
         {
-            callback(true, "data too big, sorry :(", "", "");
+            callback?.Invoke(true, "data too big, sorry :(", "", "");
             return;
         }
 

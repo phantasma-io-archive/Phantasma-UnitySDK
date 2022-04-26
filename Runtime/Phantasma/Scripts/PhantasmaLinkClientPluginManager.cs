@@ -29,6 +29,7 @@ public class PhantasmaLinkClientPluginManager : MonoBehaviour
 
     private void InitializePlugin(string pluginName)
     {
+#if UNITY_ANDROID
         UnityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
         UnityActivity = UnityClass.GetStatic<AndroidJavaObject>("currentActivity");
         _PluginInstance = new AndroidJavaObject(pluginName);
@@ -39,26 +40,39 @@ public class PhantasmaLinkClientPluginManager : MonoBehaviour
         
         _PluginInstance.CallStatic("ReceiveActivity", UnityActivity);
         PhantasmaLinkClient.Instance.Enable();
+#endif
     }
 
     public void OnDoSomething()
     {
+#if UNITY_ANDROID
         var result = _PluginInstance.Call<string>("DoSomething");
         if (DebugOutput != null )
             DebugOutput.text = $"Something: {result}";
+#endif
     }
 
-    public void OpenWallet() => _PluginInstance.Call("OpenWallet");
+    public void OpenWallet()
+    {
+        #if UNITY_ANDROID
+        _PluginInstance.Call("OpenWallet");
+        #endif
+    } 
+
 
     public async Task SendTransaction(string tx)
     {
+        #if UNITY_ANDROID
         var result = _PluginInstance.Call<string>("SendMyCommand", tx);
         await Task.Delay(0);
+        #endif
     }
 
     public void Example()
     {
+        #if UNITY_ANDROID
         PhantasmaLinkClient.Instance.Login();
+        #endif
     }
 
     public void HandleResult()
