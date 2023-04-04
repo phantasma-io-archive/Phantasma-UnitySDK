@@ -1,6 +1,6 @@
 {
   "name": "com.phantasma.phantasmalinkclient",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "displayName": "Phantasma Link Client",
   "description": "Phantasma Link Client, use to connect to the Phantasma Blockchain",
   "unity": "2020.3",
@@ -12,7 +12,15 @@
   },
   "keywords": [
     "android",
-    "Android"
+    "Android",
+    "Blockchain",
+    "phantasma",
+    "Phantasma",
+    "Phantasma Blockchain",
+    "Phantasma Link",
+    "Phantasma Link Client",
+    "Phantasma Link Client for Unity",
+    "Phantasma Link Client for Unity3D"
   ],
   "license": "ISC",
   "type": "library",
