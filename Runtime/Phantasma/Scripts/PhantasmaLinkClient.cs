@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using NativeWebSocket;
 using UnityEngine;
 using UnityEngine.UI;
 using LunarLabs.Parser;
 using LunarLabs.Parser.JSON;
-using Phantasma.Numerics;
-using Phantasma.Cryptography;
 using UnityEngine.Events;
 using Phantasma.SDK;
 using System.Text;
+using Phantasma.Core.Cryptography;
+using Phantasma.Core.Numerics;
 
 public class PhantasmaLinkClient: MonoBehaviour
 {
@@ -103,6 +104,16 @@ public class PhantasmaLinkClient: MonoBehaviour
 
         SetMessage("Loading...");
     }
+    
+    
+    /// <summary>
+    /// Run on Start
+    /// </summary>
+    private void Start()
+    {
+        this.Enable();
+    }
+
 
     /// <summary>
     /// Update method
@@ -298,9 +309,6 @@ public class PhantasmaLinkClient: MonoBehaviour
                 Debug.LogWarning("Got weird request with id " + reqID);
             }
         };
-
-
-        Debug.LogError(websocket.State);
 
         // waiting for messages
         await websocket.Connect();

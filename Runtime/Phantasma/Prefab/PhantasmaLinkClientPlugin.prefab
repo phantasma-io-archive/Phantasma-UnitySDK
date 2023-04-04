@@ -13,7 +13,7 @@ GameObject:
   m_Layer: 0
   m_Name: PhantasmaLinkClientPlugin
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 2800000, guid: 4542c20917bdc8f498267e2ecd439233, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -44,5 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23fe29cfba7ca024f87f71012457303d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PluginName: com.phantasma.phantasmalinkclient.PhantasmaLinkClientClass
   DebugOutput: {fileID: 0}
