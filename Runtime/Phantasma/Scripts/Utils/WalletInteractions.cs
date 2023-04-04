@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Org.BouncyCastle.Math;
 using Phantasma.Business.VM.Utils;
 using Phantasma.Core.Cryptography;
 using Phantasma.Core.Numerics;
@@ -9,26 +10,11 @@ using UnityEngine;
 
 public class WalletInteractions : MonoBehaviour
 {
-    #region Events
-    public event Action<string, bool> OnLoginEvent;
-    public event Action<string, bool> OnGetBalancesEvent;
-    public event Action<string, bool> OnSendRawTransactionEvent;
-    public event Action<string, bool> OnGetTransactionEvent;
-    public event Action<string, bool> OnGetNFTEvent;
-    public event Action<string, bool> OnGetNFTsEvent;
-    public event Action<string, bool> OnInvokeRawScriptEvent;
-    public event Action<string, bool> OnMintNFTEvent;
-    public event Action<string, bool> OnBurnNFTEvent;
-    public event Action<string, bool> OnSendNFTEvent;
-    public event Action<string, bool> OnInfuseTokenEvent;
-    public event Action<string, bool> OnMintTokensEvent;
-    public event Action<string, bool> OnBurnTokensEvent;
-    public event Action<string, bool> OnTransferTokensEvent;
-    public event Action<string, bool> OnTransferBalanceEvent;
-    public event Action<string, bool> OnSignDataEvent;
-    public event Action<string, bool> OnMultiSigEvent;
-    #endregion
 
+    #region Events
+    public event Action<string,bool> OnLoginEvent;
+    #endregion
+    
     /// <summary>
     /// Get the balances of the logged account.
     /// </summary>
@@ -135,6 +121,9 @@ public class WalletInteractions : MonoBehaviour
         }));
     }
 
+    /// <summary>
+    /// Mint an NFT - this method is use to mint an NFT.
+    /// </summary>
     public void MintNFT()
     {
         if (!PhantasmaLinkClient.Instance.IsLogged) return;
@@ -142,11 +131,44 @@ public class WalletInteractions : MonoBehaviour
         ScriptBuilder sb = new ScriptBuilder();
         var userAddress = Address.FromText(PhantasmaLinkClient.Instance.Address);
         var toAddress = Address.FromText("P2KKEjZK7AbcKZjuZMsWKKgEjNzeGtr2zBiV7qYJHxNXvUa");
-        var symbol = "SOUL";
-        var amount = UnitConversion.ToBigInteger(1, 8);
+        var symbol = "NSYM";
+        var rom = new byte[0];
+        var ram = new byte[0];
+        var series = new BigInteger("0");
         var payload = Base16.Decode("OurDappExample");
         var script = sb.AllowGas(userAddress, Address.Null, PhantasmaLinkClient.Instance.GasPrice, PhantasmaLinkClient.Instance.GasLimit ).
-            CallInterop("Runtime.TransferTokens", userAddress, toAddress, symbol, amount).
+            CallInterop("Runtime.MintToken", userAddress, toAddress, symbol, rom, ram, series).
+            SpendGas(userAddress).
+            EndScript();
+        
+        PhantasmaLinkClient.Instance.SendTransaction("main", script, payload, (hash, s) =>
+        {
+            if ( hash.IsNull )
+            {
+                Debug.Log("Transaction failed: " + s);
+                return;
+            }
+            
+            Debug.Log("Transaction sent: " + hash);
+        });
+    }
+    
+    /// <summary>
+    /// Update an NFT RAM - this method is use to update the RAM of an NFT.
+    /// </summary>
+    public void UpdateNFT()
+    {
+        if (!PhantasmaLinkClient.Instance.IsLogged) return;
+
+        ScriptBuilder sb = new ScriptBuilder();
+        var userAddress = Address.FromText(PhantasmaLinkClient.Instance.Address);
+        var toAddress = Address.FromText("P2KKEjZK7AbcKZjuZMsWKKgEjNzeGtr2zBiV7qYJHxNXvUa");
+        var symbol = "NSYM";
+        var ram = new byte[0];
+        var tokenID = new BigInteger("0");
+        var payload = Base16.Decode("OurDappExample");
+        var script = sb.AllowGas(userAddress, Address.Null, PhantasmaLinkClient.Instance.GasPrice, PhantasmaLinkClient.Instance.GasLimit ).
+            CallInterop("Runtime.WriteToken", userAddress, symbol, tokenID, ram).
             SpendGas(userAddress).
             EndScript();
         
@@ -162,11 +184,39 @@ public class WalletInteractions : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// Burn NFT - this method is use to burn an NFT.
+    /// </summary>
     public void BurnNFT()
     {
+        if (!PhantasmaLinkClient.Instance.IsLogged) return;
 
+        ScriptBuilder sb = new ScriptBuilder();
+        var userAddress = Address.FromText(PhantasmaLinkClient.Instance.Address);
+        var toAddress = Address.FromText("P2KKEjZK7AbcKZjuZMsWKKgEjNzeGtr2zBiV7qYJHxNXvUa");
+        var symbol = "CROWN";
+        var id = new BigInteger("1000000000000");
+        var payload = Base16.Decode("OurDappExample");
+        var script = sb.AllowGas(userAddress, Address.Null, PhantasmaLinkClient.Instance.GasPrice, PhantasmaLinkClient.Instance.GasLimit ).
+            CallInterop("Runtime.BurnToken", userAddress, symbol, id).
+            SpendGas(userAddress).
+            EndScript();
+        
+        PhantasmaLinkClient.Instance.SendTransaction("main", script, payload, (hash, s) =>
+        {
+            if ( hash.IsNull )
+            {
+                Debug.Log("Transaction failed: " + s);
+                return;
+            }
+            
+            Debug.Log("Transaction sent: " + hash);
+        });
     }
 
+    /// <summary>
+    /// Send NFT - this method is use to send an NFT.
+    /// </summary>
     public void SendNFT()
     {
         if (!PhantasmaLinkClient.Instance.IsLogged) return;
@@ -174,8 +224,8 @@ public class WalletInteractions : MonoBehaviour
         ScriptBuilder sb = new ScriptBuilder();
         var userAddress = Address.FromText(PhantasmaLinkClient.Instance.Address);
         var toAddress = Address.FromText("P2KKEjZK7AbcKZjuZMsWKKgEjNzeGtr2zBiV7qYJHxNXvUa");
-        var symbol = "SOUL";
-        var tokenID = "";
+        var symbol = "CROWN";
+        var tokenID = new BigInteger("190000000");
         var payload = Base16.Decode("OurDappExample");
         var script = sb.AllowGas(userAddress, Address.Null, PhantasmaLinkClient.Instance.GasPrice, PhantasmaLinkClient.Instance.GasLimit ).
             CallInterop("Runtime.TransferToken", userAddress, toAddress, symbol, tokenID).
@@ -194,19 +244,95 @@ public class WalletInteractions : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// Infuse an NFT - this method is use to infuse an NFT.
+    /// </summary>
     public void InfuseToken()
     {
+        if (!PhantasmaLinkClient.Instance.IsLogged) return;
 
+        ScriptBuilder sb = new ScriptBuilder();
+        var userAddress = Address.FromText(PhantasmaLinkClient.Instance.Address);
+        var symbol = "CROWN";
+        var tokenID = new BigInteger("190000000");
+        var infuseSymbol = "SOUL"; // IT could be an NFT
+        var infuseAmount = UnitConversion.ToBigInteger(1, 8);
+        var payload = Base16.Decode("OurDappExample");
+        var script = sb.AllowGas(userAddress, Address.Null, PhantasmaLinkClient.Instance.GasPrice, PhantasmaLinkClient.Instance.GasLimit ).
+            CallInterop("Runtime.InfuseToken", userAddress, symbol, tokenID, infuseSymbol, infuseAmount).
+            SpendGas(userAddress).
+            EndScript();
+        
+        PhantasmaLinkClient.Instance.SendTransaction("main", script, payload, (hash, s) =>
+        {
+            if ( hash.IsNull )
+            {
+                Debug.Log("Transaction failed: " + s);
+                return;
+            }
+            
+            Debug.Log("Transaction sent: " + hash);
+        });
     }
 
+    /// <summary>
+    /// Mint Tokens - this method is use to mint tokens.
+    /// </summary>
     public void MintTokens()
     {
+        if (!PhantasmaLinkClient.Instance.IsLogged) return;
 
+        ScriptBuilder sb = new ScriptBuilder();
+        var userAddress = Address.FromText(PhantasmaLinkClient.Instance.Address);
+        var toAddress = Address.FromText("P2KKEjZK7AbcKZjuZMsWKKgEjNzeGtr2zBiV7qYJHxNXvUa");
+        var symbol = "NSYM";
+        var amount = new BigInteger("190000000");
+        var payload = Base16.Decode("OurDappExample");
+        var script = sb.AllowGas(userAddress, Address.Null, PhantasmaLinkClient.Instance.GasPrice, PhantasmaLinkClient.Instance.GasLimit ).
+            CallInterop("Runtime.MintTokens", userAddress, toAddress, symbol, amount).
+            SpendGas(userAddress).
+            EndScript();
+        
+        PhantasmaLinkClient.Instance.SendTransaction("main", script, payload, (hash, s) =>
+        {
+            if ( hash.IsNull )
+            {
+                Debug.Log("Transaction failed: " + s);
+                return;
+            }
+            
+            Debug.Log("Transaction sent: " + hash);
+        });
     }
 
+    /// <summary>
+    /// Burn Tokens - this method is use to burn tokens.
+    /// </summary>
     public void BurnTokens()
     {
+        if (!PhantasmaLinkClient.Instance.IsLogged) return;
 
+        ScriptBuilder sb = new ScriptBuilder();
+        var userAddress = Address.FromText(PhantasmaLinkClient.Instance.Address);
+        var toAddress = Address.FromText("P2KKEjZK7AbcKZjuZMsWKKgEjNzeGtr2zBiV7qYJHxNXvUa");
+        var symbol = "NSYM";
+        var amount = new BigInteger("1000000000000");
+        var payload = Base16.Decode("OurDappExample");
+        var script = sb.AllowGas(userAddress, Address.Null, PhantasmaLinkClient.Instance.GasPrice, PhantasmaLinkClient.Instance.GasLimit ).
+            CallInterop("Runtime.BurnTokens", userAddress, symbol, amount).
+            SpendGas(userAddress).
+            EndScript();
+        
+        PhantasmaLinkClient.Instance.SendTransaction("main", script, payload, (hash, s) =>
+        {
+            if ( hash.IsNull )
+            {
+                Debug.Log("Transaction failed: " + s);
+                return;
+            }
+            
+            Debug.Log("Transaction sent: " + hash);
+        });
     }
 
     /// <summary>
