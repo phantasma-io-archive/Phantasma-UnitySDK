@@ -1,10 +1,10 @@
-# Phantasma Link Client
+# Phantasma Unity SDK
 This is the UPM Lib Unity SDK for Phantasma to interact with the Phantasma Blockchain.
 
 # Import it to your project.
 Inside Unity, go to `Window > Package Manager`. 
 Then on the Top left corner press the `+` button, add package from git URL
-This is the git URL to import the package `https://github.com/phantasma-io/PhantasmaLinkClient.git`
+This is the git URL to import the package `https://github.com/phantasma-io/Phantasma-UnitySDK.git`
 
 # How to connect to the Wallet via the SDK
 Setup your scene, Add the PhantasmaLinkClient prefab to your scene.
