@@ -1,3 +1,8 @@
+[V.1.0.8]
+
+- On the FetchAccount added the _ownershipMap to store NFTs IDs.
+- Added a call for getting all the NFTs IDs for a given symbol.
+
 [V.1.0.7]
 
 - Added missing API Calls.

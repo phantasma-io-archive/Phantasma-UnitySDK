@@ -95,7 +95,7 @@ public class WalletInteractions : MonoBehaviour
         if (!PhantasmaLinkClient.Instance.IsLogged) return;
         PhantasmaAPI api = new PhantasmaAPI("https://testnet.phantasma.io/rpc");
         var symbol = "CROWN";
-        var IDs = new String[] { "" };
+        var IDs = PhantasmaLinkClient.Instance.GetNFTs(symbol);
         StartCoroutine(api.GetNFTs(symbol, IDs, (nfts) =>
         {
             Debug.Log(nfts.Length);

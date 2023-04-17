@@ -20,12 +20,14 @@ public class PhantasmaLinkClient: MonoBehaviour
         public readonly string symbol;
         public readonly BigInteger value;
         public readonly int decimals;
+        public readonly string[] ids;
 
-        public Balance(string symbol, BigInteger value, int decimals)
+        public Balance(string symbol, BigInteger value, int decimals, string[] ids)
         {
             this.symbol = symbol;
             this.value = value;
             this.decimals = decimals;
+            this.ids = ids;
         }
     }
 
@@ -83,6 +85,7 @@ public class PhantasmaLinkClient: MonoBehaviour
     private Dictionary<int, Action<DataNode>> _requestCallbacks = new Dictionary<int, Action<DataNode>>();
 
     private Dictionary<string, Balance> _balanceMap = new Dictionary<string, Balance>();
+    private Dictionary<string, Balance> _ownershipMap = new Dictionary<string, Balance>();
 
     #region Events
     public static UnityEvent<bool, string> OnLogin;
@@ -165,6 +168,7 @@ public class PhantasmaLinkClient: MonoBehaviour
                 this.IsLogged = true;
 
                 _balanceMap.Clear();
+                _ownershipMap.Clear();
 
                 var balances = result.GetNode("balances");
                 if (balances != null)
@@ -174,9 +178,17 @@ public class PhantasmaLinkClient: MonoBehaviour
                         var symbol = child.GetString("symbol");
                         var value = child.GetString("value");
                         var decimals = child.GetInt32("decimals");
+                        var ids_node = child.GetNode("ids");
+                        var ids_array = new string[ids_node.ChildCount];
+                        for (int i = 0; i < ids_node.ChildCount; i++)
+                        {
+                            ids_array[i] = ids_node.GetString(i);
+                        }
 
                         var amount = BigInteger.Parse(value);
-                        _balanceMap[symbol] = new Balance(symbol, amount, decimals);
+                        _balanceMap[symbol] = new Balance(symbol, amount, decimals, ids_array);
+                        if ( ids_node.ChildCount > 0)  
+                            _ownershipMap[symbol] = new Balance(symbol, amount, decimals, ids_array);
                     }
                 }
 
@@ -330,6 +342,22 @@ public class PhantasmaLinkClient: MonoBehaviour
         }
 
         return 0;
+    }
+    
+    /// <summary>
+    /// Returns the NFTs IDs for a specific symbol
+    /// </summary>
+    /// <param name="symbol"></param>
+    /// <returns></returns>
+    public string[] GetNFTs(string symbol)
+    {
+        if (_ownershipMap.ContainsKey(symbol))
+        {
+            var temp = _ownershipMap[symbol];
+            return temp.ids;
+        }
+
+        return Array.Empty<string>();
     }
 
     /// <summary>
