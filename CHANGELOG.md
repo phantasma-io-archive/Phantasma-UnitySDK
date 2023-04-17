@@ -1,3 +1,7 @@
+[v.1.0.9]
+
+- Updating the packge version.
+
 [V.1.0.8]
 
 - On the FetchAccount added the _ownershipMap to store NFTs IDs.
