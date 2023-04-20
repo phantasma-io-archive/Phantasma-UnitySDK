@@ -179,12 +179,16 @@ public class PhantasmaLinkClient: MonoBehaviour
                         var value = child.GetString("value");
                         var decimals = child.GetInt32("decimals");
                         var ids_node = child.GetNode("ids");
-                        var ids_array = new string[ids_node.ChildCount];
-                        for (int i = 0; i < ids_node.ChildCount; i++)
+                        string[] ids_array = new string[0];
+                        if (ids_node != null)
                         {
-                            ids_array[i] = ids_node.GetString(i);
+                            ids_array = new string[ids_node.ChildCount];
+                            for (int i = 0; i < ids_node.ChildCount; i++)
+                            {
+                                ids_array[i] = ids_node.GetString(i);
+                            }
                         }
-
+                        
                         var amount = BigInteger.Parse(value);
                         _balanceMap[symbol] = new Balance(symbol, amount, decimals, ids_array);
                         if ( ids_node.ChildCount > 0)  
