@@ -1,6 +1,11 @@
 [v.1.0.10]
 
-- Updating the packge version.
+- Updating the package version.
+- Fix issue when connecting to the wallet. (minor)
+
+[v.1.0.10]
+
+- Updating the package version.
 - Fix issue when connecting to the wallet.
 
 [v.1.0.9]

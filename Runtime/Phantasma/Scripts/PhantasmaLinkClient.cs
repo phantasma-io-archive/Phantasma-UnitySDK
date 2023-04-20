@@ -177,6 +177,7 @@ public class PhantasmaLinkClient: MonoBehaviour
                     {
                         var symbol = child.GetString("symbol");
                         var value = child.GetString("value");
+                        var amount = BigInteger.Parse(value);
                         var decimals = child.GetInt32("decimals");
                         var ids_node = child.GetNode("ids");
                         string[] ids_array = new string[0];
@@ -189,9 +190,8 @@ public class PhantasmaLinkClient: MonoBehaviour
                             }
                         }
                         
-                        var amount = BigInteger.Parse(value);
                         _balanceMap[symbol] = new Balance(symbol, amount, decimals, ids_array);
-                        if ( ids_node.ChildCount > 0)  
+                        if ( ids_array.Length > 0)  
                             _ownershipMap[symbol] = new Balance(symbol, amount, decimals, ids_array);
                     }
                 }
