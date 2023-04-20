@@ -1,3 +1,8 @@
+[v.1.0.10]
+
+- Updating the packge version.
+- Fix issue when connecting to the wallet.
+
 [v.1.0.9]
 
 - Updating the packge version.
