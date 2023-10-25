@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Globalization;
 using System.Text;
-using Newtonsoft.Json;
 using Phantasma.Core.Cryptography;
 using Phantasma.Core.Domain;
 using Phantasma.Core.Numerics;
@@ -350,8 +349,9 @@ namespace Phantasma.SDK
         /// <returns></returns>
         public IEnumerator GetLeaderboard(string name, Action<Leaderboard> callback, Action<EPHANTASMA_SDK_ERROR_TYPE, string> errorHandlingCallback = null)
         {
-            yield return WebClient.RPCRequestJSON(Host, "getLeaderboard", WebClient.NoTimeout, errorHandlingCallback, (node) => {
-                var result = JsonUtility.FromJson<Leaderboard>(node);
+            yield return WebClient.RPCRequest(Host, "getLeaderboard", WebClient.NoTimeout, errorHandlingCallback, (node) =>
+            {
+                var result = Leaderboard.FromNode(node);
                 callback(result);
             }, name);
         }

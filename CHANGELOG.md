@@ -1,3 +1,8 @@
+[v.1.0.11]
+
+- Updating the package version.
+- Fix issue when getting the Leaderboard.
+
 [v.1.0.10]
 
 - Updating the package version.
