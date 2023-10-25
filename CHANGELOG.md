@@ -1,4 +1,4 @@
-[v.1.0.11]
+[v.1.0.12]
 
 - Updating the package version.
 - Fix issue when getting the Leaderboard.
